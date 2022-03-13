@@ -1,4 +1,4 @@
-// mandelbrot_clocks.c
+// mandelbrot.c
 // written by Elisa Uhura.
 #include <stdio.h>
 #include <stdlib.h>
