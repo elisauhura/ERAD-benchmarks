@@ -120,8 +120,8 @@ void *thread(void *_data) {
 
     for(int i = data->line0; i < data->lineF; i++) {
         for(int j = 0; j < data->w; j++) {
-            double a = (double)i/data->w * (data->yr - data->xr) + data->xr;
-            double b = (double)j/data->h * (data->xi - data->yi) + data->yi;
+            double a = (double)j/data->w * (data->yr - data->xr) + data->xr;
+            double b = (double)i/data->h * (data->xi - data->yi) + data->yi;
             double za = 0.0, zb = 0.0, ta, tb;
             int divergent = 0;
 
@@ -133,7 +133,7 @@ void *thread(void *_data) {
                 divergent = za*za + zb*zb > 4.0;
             }
 
-            data->bitmap[j*width+i] = divergent ? '1' : '0';
+            data->bitmap[i*width+j] = divergent ? '1' : '0';
             if(!divergent) divs += 1;
         }
     }

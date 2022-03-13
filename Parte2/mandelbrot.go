@@ -9,10 +9,6 @@ import (
 	"sync"
 )
 
-type Thread struct {
-	line0, lineF, w, h, max_iters, xr, xi, yr, yi float64
-}
-
 var w, h, max_iters, workers int
 var bitmap []byte
 var xr, xi, yr, yi float64
@@ -57,8 +53,8 @@ func work(line0, lineF int) {
 
 	for i := line0; i < lineF; i++ {
 		for j := 0; j < w; j++ {
-			a := float64(i)/dw*(yr-xr) + xr
-			b := float64(j)/dh*(xi-yi) + yi
+			a := float64(j)/dw*(yr-xr) + xr
+			b := float64(i)/dh*(xi-yi) + yi
 			var za, zb, ta, tb float64
 			div := false
 
@@ -71,9 +67,9 @@ func work(line0, lineF int) {
 			}
 
 			if div {
-				bitmap[j*w+i] = one
+				bitmap[i*w+j] = one
 			} else {
-				bitmap[j*w+i] = zero
+				bitmap[i*w+j] = zero
 			}
 
 		}
