@@ -23,7 +23,7 @@ struct thread {
 void parse_args(char **);
 void init_clock(void);
 void close_clock(void);
-void write(char *, struct timespec*, struct timespec*);
+void write(char *, struct timespec*, struct timespec*, int *);
 void *thread(void *);
 void write_img(void);
 
@@ -96,14 +96,14 @@ void close_clock(void) {
     clock_gettime(CLOCK_MONOTONIC, &monoF);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &procF);
 
-    write("mono", &mono0, &monoF);
-    write("proc", &proc0, &procF);
+    write("mono", &mono0, &monoF, NULL);
+    write("proc", &proc0, &procF, NULL);
 }
 
-void write(char *name, struct timespec*a, struct timespec*b) {
+void write(char *name, struct timespec*a, struct timespec*b, int *n) {
     double t0 = (double)a->tv_sec + ((double)a->tv_nsec * 10e-9);
     double tf = (double)b->tv_sec + ((double)b->tv_nsec * 10e-9);
-    fprintf(stderr, "%s: %.6lf\n", name, tf-t0);
+    fprintf(stderr, "%s, %.6lf, %d\n", name, tf-t0, n == NULL ? 0 : *n);
 }
 
 void write_img(void) {
@@ -116,6 +116,7 @@ void *thread(void *_data) {
     struct thread *data = _data;
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &data->clock0);
     int width = data->w;
+    int divs = 0;
 
     for(int i = data->line0; i < data->lineF; i++) {
         for(int j = 0; j < data->w; j++) {
@@ -133,10 +134,11 @@ void *thread(void *_data) {
             }
 
             data->bitmap[j*width+i] = divergent ? '1' : '0';
+            if(!divergent) divs += 1;
         }
     }
 
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &data->clockF);
-    write("thread", &data->clock0, &data->clockF);
+    write("thread", &data->clock0, &data->clockF, &divs);
     return NULL;
 }
