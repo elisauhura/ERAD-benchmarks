@@ -1,0 +1,20 @@
+# started on Thu Mar 17 18:34:57 2022
+
+
+ Performance counter stats for './binary-trees 15':
+
+            268,19 msec task-clock                #    0,960 CPUs utilized          
+                30      context-switches          #    0,112 K/sec                  
+                 0      cpu-migrations            #    0,000 K/sec                  
+               731      page-faults               #    0,003 M/sec                  
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+       0,279237198 seconds time elapsed
+
+       0,264584000 seconds user
+       0,003949000 seconds sys
+
+
