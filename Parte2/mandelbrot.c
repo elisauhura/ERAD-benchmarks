@@ -101,8 +101,8 @@ void close_clock(void) {
 }
 
 void write(char *name, struct timespec*a, struct timespec*b, int *n) {
-    double t0 = (double)a->tv_sec + ((double)a->tv_nsec * 10e-9);
-    double tf = (double)b->tv_sec + ((double)b->tv_nsec * 10e-9);
+    double t0 = (double)a->tv_sec + ((double)a->tv_nsec / 1000000000);
+    double tf = (double)b->tv_sec + ((double)b->tv_nsec / 1000000000);
     fprintf(stderr, "%s, %.6lf, %d\n", name, tf-t0, n == NULL ? 0 : *n);
 }
 
