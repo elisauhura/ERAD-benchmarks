@@ -3,10 +3,10 @@
 package main
 
 import (
+	"crypto/sha256"
 	"fmt"
-	"log"
+	"hash"
 	"os"
-	"runtime/pprof"
 	"strings"
 	"sync"
 )
@@ -15,23 +15,20 @@ var w, h, max_iters, workers int
 var bitmap []byte
 var xr, xi, yr, yi float64
 var wg sync.WaitGroup
+var sha hash.Hash
 
 var one byte = []byte("1")[0]
 var zero byte = []byte("0")[0]
 
 func main() {
-	f, err := os.Create("cpu.prof")
-	if err != nil {
-		log.Fatal(err)
-	}
-	pprof.StartCPUProfile(f)
-	defer pprof.StopCPUProfile()
-
 	if len(os.Args) < 9 {
 		fmt.Println("./program w h xr xi yr yi max_iters workers")
 		os.Exit(1)
 	}
 	parseArgs()
+
+	sha = sha256.New()
+	defer fmt.Printf("%x\n", sha.Sum(nil))
 
 	bitmap = make([]byte, w*h)
 
@@ -44,7 +41,6 @@ func main() {
 	wg.Wait()
 
 	writeImage()
-
 }
 
 func parseArgs() {
@@ -53,8 +49,8 @@ func parseArgs() {
 }
 
 func writeImage() {
-	fmt.Printf("P1\n%d %d\n", w, h)
-	fmt.Println(string(bitmap))
+	fmt.Fprintf(sha, "P1\n%d %d\n", w, h)
+	fmt.Fprintln(sha, string(bitmap))
 }
 
 func work(line0, lineF int) {
